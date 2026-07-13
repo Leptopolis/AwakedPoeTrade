@@ -29,23 +29,24 @@ jobs:
       - name: Build JAR
         run: ./mvnw clean package -DskipTests
 
-      - name: Install WiX Toolset (для jpackage)
+      - name: Install WiX Toolset (required for jpackage)
         run: choco install wixtoolset -y
 
-      - name: Create Windows EXE
+      - name: Create Windows EXE with Spring Boot JarLauncher
         run: |
           jpackage `
             --input target/ `
             --name AwakedPoeTrade `
             --main-jar AwakedPoeTrade-0.0.1-SNAPSHOT.jar `
-            --main-class com.example.awakedPoeTrade.AwakedPoeTradeApplication `
+            --main-class org.springframework.boot.loader.launch.JarLauncher `
+            --java-options "-Dspring-boot.run.main=com.example.awakedPoeTrade.AwakedPoeTradeApplication" `
             --type app-image `
             --dest dist/ `
             --win-console `
             --vendor "YourName" `
             --app-version "1.0.0"
 
-      - name: Upload EXE
+      - name: Upload EXE artifact
         uses: actions/upload-artifact@v4
         with:
           name: AwakedPoeTrade-Windows
