@@ -65,7 +65,7 @@ public class MainController{
         Rectangle screen = ge.getMaximumWindowBounds();
         overlayFrame.setLocation(screen.width - 320, 50);
 
-        //overlayFrame.setVisible(true);
+        overlayFrame.setVisible(true);
     }
 
     private void showPrice(String price){
