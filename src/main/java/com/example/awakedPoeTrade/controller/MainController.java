@@ -16,7 +16,7 @@ import java.awt.*;
 @Component
 public class MainController{
     private final AwakedPoeTradeService awakedPoeTradeService;
-    private JDialog overlayDialog;
+    private JFrame overlayFrame;
     private JLabel priceLabel;
 
 
@@ -38,16 +38,17 @@ public class MainController{
     }
 
     private void initOverlay(){
-        JFrame mainFrame = new JFrame();
-        mainFrame.setUndecorated(true);
-        mainFrame.setAlwaysOnTop(true);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //JFrame mainFrame = new JFrame();
+        //mainFrame.setUndecorated(true);
+        //mainFrame.setAlwaysOnTop(true);
+        //mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        overlayDialog = new JDialog(mainFrame, false);
-        overlayDialog.setUndecorated(true);
-        overlayDialog.setAlwaysOnTop(true);
-        overlayDialog.setBackground(new Color(0,0,0,0));
-        overlayDialog.setSize(300, 100);
+        overlayFrame = new JFrame("Awaked POE Trade");
+        overlayFrame.setUndecorated(false);
+        overlayFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        overlayFrame.setAlwaysOnTop(true);
+        //overlayFrame.setBackground(new Color(0,0,0,0));
+        overlayFrame.setSize(300, 100);
 
         JPanel panel = new JPanel();
         panel.setBackground(new Color(30,30,30,220));
@@ -58,11 +59,24 @@ public class MainController{
         priceLabel.setFont(new Font("Arial", Font.BOLD, 16));
 
         panel.add(priceLabel);
-        overlayDialog.add(panel);
+        overlayFrame.add(panel);
 
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Rectangle screen = ge.getMaximumWindowBounds();
-        overlayDialog.setLocation(screen.width - 320, 50);
+        overlayFrame.setLocation(screen.width - 320, 50);
+
+        //overlayFrame.setVisible(true);
+    }
+
+    private void showPrice(String price){
+        SwingUtilities.invokeLater(()->{
+            priceLabel.setText(price);
+            overlayFrame.setVisible(true);
+        });
+    }
+
+    private void hideOverlay(){
+        SwingUtilities.invokeLater(()->overlayFrame.setVisible(false));
     }
 
     private void registerHotKey(){
@@ -92,9 +106,13 @@ public class MainController{
         try{
             String itemText = awakedPoeTradeService.getText();
             awakedPoeTradeService.parseItem(itemText);
+            priceLabel.setText("");
+            showPrice(itemText);
         }catch(Exception e){
             System.err.println("error");
         }
+
+
     }
 
 }
