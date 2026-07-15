@@ -106,8 +106,10 @@ public class MainController{
         try{
             String itemText = awakedPoeTradeService.getText();
             awakedPoeTradeService.parseItem(itemText);
+            String price = awakedPoeTradeService.findItem(itemText);
             priceLabel.setText("");
-            showPrice(itemText);
+            System.out.println(price);
+            showPrice(price);
         }catch(Exception e){
             System.err.println("error");
         }
